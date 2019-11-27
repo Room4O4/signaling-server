@@ -32,23 +32,33 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('offer', (room, offer) => {
-    // Send the offer to other clients in the room.
+  socket.on('offer', (room, peerId, offer) => {
+    // Send the offer to a particular client in the room.
     // Currently a room can have only two peers.
     // Thus this emit would send the offer to the client other than the one who sent it.
-    socket.to(room).emit('offer', offer);
+    socket.to(room).emit('offer', peerId, offer);
   });
 
-  socket.on('answer', (room, answer) => {
-    // Send the offer to other clients in the room.
+  socket.on('answer', (room, peerId, answer) => {
+    // Send the offer to a particular client in the room.
     // Currently a room can have only two peers.
     // Thus this emit would send the offer to the client other than the one who sent it.
-    socket.to(room).emit('answer', answer);
+    socket.to(room).emit('answer', peerId, answer);
   });
 
-  socket.on('candidate', (room, candidate) => {
-    // Send the candidate to all clients in the room except the sender.
-    socket.to(room).emit('candidate', candidate);
+  socket.on('candidate', (room, peerId, candidate) => {
+    // Send the candidate to a particular client in the room.
+    socket.to(room).emit('candidate', peerId, candidate);
+  });
+
+  socket.on('fileInfo', (room, peerId, fileInfo) => {
+    // Send fileInfo to a particular client in the room.
+    socket.to(room).emit('fileInfo', peerId, fileInfo);
+  });
+
+  socket.on('ready', (room, peerId) => {
+    // Send ready message to a particular client in the room.
+    socket.to(room).emit('ready', peerId);
   });
 });
 server.listen(PORT);
